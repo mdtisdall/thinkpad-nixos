@@ -4,6 +4,9 @@ let
   swaylock = "${config.programs.swaylock.package}/bin/swaylock";
   swaymsg = "${pkgs.sway}/bin/swaymsg";
 
+  # Font Awesome 7 Solid glyph via Pango markup, e.g. faIcon "f1eb" (wifi).
+  faIcon = cp: "<span font_family='Font Awesome 7 Free' font_weight='900'>&#x${cp};</span>";
+
   # Random Voronoi mosaic: 30-60 flat cells, each a color from the palette.
   genLockImage = pkgs.writeShellScript "gen-lock-image" ''
     set -eu
@@ -45,7 +48,101 @@ in
   # immediately instead of only after a password is submitted.
   services.polkit-gnome.enable = true;
 
-  programs.waybar.enable = true;
+  # Mac-like menu bar: workspaces left, window title center, status right.
+  programs.waybar = {
+    enable = true;
+
+    settings.mainBar = {
+      layer = "top";
+      position = "top";
+      height = 28;
+      spacing = 4;
+
+      modules-left = [ "sway/workspaces" "sway/mode" ];
+      modules-center = [ "sway/window" ];
+      modules-right = [ "tray" "network" "pulseaudio" "battery" "clock" ];
+
+      "sway/workspaces".disable-scroll = true;
+      "sway/window".max-length = 60;
+      tray = { icon-size = 16; spacing = 10; };
+
+      network = {
+        format-wifi = faIcon "f1eb";
+        format-ethernet = faIcon "f796";
+        format-disconnected = faIcon "f1eb";
+        tooltip-format-wifi = "{essid} ({signalStrength}%)\n{ipaddr}";
+        tooltip-format-ethernet = "{ifname}\n{ipaddr}";
+        tooltip-format-disconnected = "Disconnected";
+        on-click = "foot nmtui";
+      };
+
+      pulseaudio = {
+        format = "{icon}";
+        format-muted = faIcon "f6a9";
+        format-icons.default = map faIcon [ "f026" "f027" "f028" ];
+        tooltip-format = "Volume {volume}%";
+        on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+      };
+
+      battery = {
+        states = { warning = 20; critical = 10; };
+        format = "{capacity}%  {icon}";
+        format-charging = "{capacity}%  ${faIcon "f0e7"}";
+        format-plugged = "{capacity}%  ${faIcon "f1e6"}";
+        format-icons = map faIcon [ "f244" "f243" "f242" "f241" "f240" ];
+        tooltip-format = "{timeTo}";
+      };
+
+      clock = {
+        format = "{:%a %b %d  %I:%M %p}";
+        tooltip-format = "<tt><small>{calendar}</small></tt>";
+      };
+    };
+
+    # Translucent navy with vaporwave accents (same palette as the lock screen).
+    style = ''
+      * {
+        font-family: "Inter", sans-serif;
+        font-size: 13px;
+        border: none;
+        border-radius: 0;
+        min-height: 0;
+      }
+
+      window#waybar {
+        background: rgba(10, 12, 55, 0.55);
+        color: #e8e6f5;
+      }
+
+      tooltip {
+        background: rgba(10, 12, 55, 0.92);
+        border: 1px solid #375971;
+        border-radius: 6px;
+      }
+
+      #workspaces button {
+        padding: 0 8px;
+        background: transparent;
+        color: rgba(232, 230, 245, 0.55);
+      }
+      #workspaces button.focused {
+        color: #ff61c6;
+        box-shadow: inset 0 -2px #ff61c6;
+      }
+      #workspaces button.urgent { color: #ff9900; }
+
+      #mode { padding: 0 8px; color: #f4ff61; }
+      #window { color: rgba(232, 230, 245, 0.8); }
+
+      #tray, #network, #pulseaudio, #battery, #clock { padding: 0 8px; }
+
+      #clock { color: #5cecff; }
+      #battery.charging, #battery.plugged { color: #f4ff61; }
+      #battery.warning:not(.charging) { color: #ff9900; }
+      #battery.critical:not(.charging) { color: #ff61c6; }
+      #network.disconnected, #pulseaudio.muted { color: rgba(232, 230, 245, 0.35); }
+    '';
+  };
   programs.foot.enable = true;
   programs.wofi.enable = true;
 

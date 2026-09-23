@@ -28,7 +28,7 @@
   };
 
   # Closest free stand-ins for San Francisco and SF Mono.
-  fonts.packages = with pkgs; [ inter jetbrains-mono ];
+  fonts.packages = with pkgs; [ inter jetbrains-mono font-awesome ];
   fonts.fontconfig.defaultFonts = {
     sansSerif = [ "Inter" ];
     monospace = [ "JetBrains Mono" ];
