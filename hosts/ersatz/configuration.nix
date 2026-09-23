@@ -21,6 +21,21 @@
   # (e.g. Secure Boot off or keys changed). Enroll with systemd-cryptenroll.
   boot.initrd.luks.devices.crypted.crypttabExtraOpts = [ "tpm2-device=auto" ];
 
+  # zram (higher priority) takes everyday swapping; the swapfile on the
+  # encrypted root holds the hibernation image. No resume= / resume_offset=:
+  # systemd saves the image location in the HibernateLocation EFI variable
+  # and the systemd initrd resumes from it.
+  zramSwap.enable = true;
+  swapDevices = [{
+    device = "/var/lib/swapfile";
+    size = 16 * 1024;
+  }];
+
+  # Lid close suspends, then hibernates after 2 hours so a forgotten laptop
+  # doesn't drain its battery.
+  services.logind.settings.Login.HandleLidSwitch = "suspend-then-hibernate";
+  systemd.sleep.settings.Sleep.HibernateDelaySec = "2h";
+
   hardware.enableRedistributableFirmware = true;
   hardware.graphics = {
     enable = true;

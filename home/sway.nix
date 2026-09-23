@@ -7,19 +7,20 @@ let
   # Font Awesome 7 Solid glyph via Pango markup, e.g. faIcon "f1eb" (wifi).
   faIcon = cp: "<span font_family='Font Awesome 7 Free' font_weight='900'>&#x${cp};</span>";
 
-  # Random Voronoi mosaic: 30-60 flat cells, each a color from the palette.
+  # Random soft mosaic: 160-240 points, each a color from the palette, blended
+  # by inverse-distance weighting (higher power = sharper, more cell-like).
   genLockImage = pkgs.writeShellScript "gen-lock-image" ''
     set -eu
     dir="$XDG_RUNTIME_DIR/lockscreen"
     ${pkgs.coreutils}/bin/mkdir -p "$dir"
     RANDOM=$(${pkgs.coreutils}/bin/od -An -N4 -tu4 /dev/urandom | ${pkgs.coreutils}/bin/tr -d ' ')
     pal=("#ff61c6" "#5cecff" "#f4ff61" "#ff9900" "#375971")
-    n=$(( 30 + RANDOM % 31 ))
+    n=$(( 160 + RANDOM % 81 ))
     pts=""
     for ((i = 0; i < n; i++)); do
       pts+="$(( RANDOM % 1920 )),$(( RANDOM % 1200 )) ''${pal[RANDOM % ''${#pal[@]}]} "
     done
-    ${pkgs.imagemagick}/bin/magick -size 1920x1200 xc: -sparse-color Voronoi "$pts" "$dir/next.tmp.png"
+    ${pkgs.imagemagick}/bin/magick -size 1920x1200 xc: -define shepards:power=4 -sparse-color Shepards "$pts" "$dir/next.tmp.png"
     ${pkgs.coreutils}/bin/mv "$dir/next.tmp.png" "$dir/next.png"
   '';
 
@@ -184,7 +185,7 @@ in
     };
   };
 
-  # Lid close suspends by default, so before-sleep covers it.
+  # before-sleep also fires for hibernate and suspend-then-hibernate.
   services.swayidle = {
     enable = true;
     events = {
