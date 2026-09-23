@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# All the checks that CI runs, in one command. Run it in the devShell:
+#
+#   nix develop --command scripts/check
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+# Tracked and new (not ignored) .nix files; never other worktrees.
+nix_files=()
+while IFS= read -r f; do
+  nix_files+=("$f")
+done < <(git ls-files --cached --others --exclude-standard -- '*.nix')
+
+echo "== nixfmt --check"
+nixfmt --check "${nix_files[@]}"
+
+echo "== statix"
+statix check .
+
+echo "== deadnix"
+# Unused module arguments (`{ config, lib, pkgs, ... }:`) are normal in NixOS
+# modules, so only unused let bindings and lambda arguments count.
+deadnix --fail --no-lambda-pattern-names "${nix_files[@]}"
+
+echo "== nix flake check"
+# Evaluates nixosConfigurations.ersatz (its toplevel drvPath) and both
+# devShells without building anything, so it runs on the Mac too.
+nix flake check --no-build --all-systems
+
+echo "scripts/check: all checks passed"

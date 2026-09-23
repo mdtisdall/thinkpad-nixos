@@ -36,7 +36,33 @@
       claude-code,
       ...
     }:
+    let
+      # Systems that edit and check this repository: the Mac and ersatz itself.
+      devSystems = [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ];
+      forDevSystems = nixpkgs.lib.genAttrs devSystems;
+    in
     {
+      # Tools for scripts/check and the dev-workflow (gh uses this repo's own token).
+      devShells = forDevSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShellNoCC {
+            packages = [
+              pkgs.gh
+              pkgs.nixfmt
+              pkgs.statix
+              pkgs.deadnix
+            ];
+          };
+        }
+      );
+
       nixosConfigurations.ersatz = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
