@@ -41,6 +41,15 @@
     };
   };
 
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "no";
+    };
+  };
+
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -52,6 +61,9 @@
     isNormalUser = true;
     initialPassword = "changeme";
     extraGroups = [ "wheel" "networkmanager" "video" "input" ];
+    openssh.authorizedKeys.keys = [
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDqn1Br5WovcAbS3QjLXvVZGgYAKVan7Gwd5REa5hkQPA8nmac1Z+lrTu6ozkheDkZc2uTu/udzPuf0ZWEomJP8D4ReQDBcHzOq727V9HZQHswmcuuIzeTPg7LDy8wHToWrJI/BWCppkHABqykXjP/GNxlqjz8mZe+FzKzUSKzEI95SHexaPhUhHyBUhceqnkb+E5OqraG/k4AaghjTWp1jKSDFi7dA5+KHYYgTYjSTp9eShDOP95yl8cRbNJgJdD/N6wN1ADKWW2COEeK83LkVz5o9pi2GIXh/jFvmu/SLighm2/uhXFPo3F81IvDPQNHvxOt8M6p460n59CdmHDbnEH24+vr8UIQLqMyyUateBWDx1NVIn2yqKc6AmvszyOWcGHlb2B0Lsg3DxBn7TXP2uaykHejddAQAaQ0pR1hhR7gQrehYNLgOD6VUjL2EFafn46Vwq+iKAC8zj3JeWt0xfbQOVi3op6w5yKUh3KFbVl8LX3l5jNlqquY//YAKeMc="
+    ];
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
