@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  networking.hostName = "thinkpad-t14s";
+  networking.hostName = "ersatz";
   networking.networkmanager.enable = true;
 
   # Guessed from your work email's domain (Penn Medicine) — change if wrong.

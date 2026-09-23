@@ -16,13 +16,13 @@
   };
 
   outputs = { self, nixpkgs, home-manager, disko, ... }: {
-    nixosConfigurations.thinkpad-t14s = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.ersatz = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         disko.nixosModules.disko
-        ./hosts/thinkpad-t14s/disko.nix
-        ./hosts/thinkpad-t14s/hardware-configuration.nix
-        ./hosts/thinkpad-t14s/configuration.nix
+        ./hosts/ersatz/disko.nix
+        ./hosts/ersatz/hardware-configuration.nix
+        ./hosts/ersatz/configuration.nix
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
