@@ -145,7 +145,63 @@ in
     '';
   };
   programs.foot.enable = true;
-  programs.wofi.enable = true;
+
+  # Spotlight-style launcher: a centered search box over a short result list,
+  # in the same translucent deep purple and vaporwave accents as the bar.
+  programs.wofi = {
+    enable = true;
+    settings = {
+      show = "drun";
+      location = "center";
+      width = 640;
+      lines = 8;
+      prompt = "Search";
+      insensitive = true;
+      allow_images = true;
+      image_size = 24;
+      no_actions = true;
+      hide_scroll = true;
+    };
+    style = ''
+      * {
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+      }
+
+      window {
+        background: rgba(61, 30, 109, 0.88);
+        border: 1px solid #b967ff;
+        border-radius: 12px;
+      }
+
+      #outer-box { padding: 10px; }
+
+      #input {
+        margin-bottom: 8px;
+        padding: 8px 12px;
+        font-size: 20px;
+        color: #e8e6f5;
+        caret-color: #5cecff;
+        background: rgba(232, 230, 245, 0.08);
+        border: none;
+        border-radius: 8px;
+        box-shadow: none;
+      }
+      #input:focus { box-shadow: inset 0 -2px #5cecff; }
+
+      #entry {
+        padding: 6px 10px;
+        border-radius: 8px;
+      }
+      #entry:selected {
+        background: rgba(255, 97, 198, 0.28);
+        outline: none;
+      }
+      #img { margin-right: 10px; }
+      #text { color: #e8e6f5; }
+      #text:selected { color: #ffffff; }
+    '';
+  };
 
   programs.swaylock = {
     enable = true;
@@ -209,7 +265,7 @@ in
     config = {
       modifier = "Mod4";
       terminal = "foot";
-      menu = "wofi --show drun";
+      menu = "wofi";
       bars = [{ command = "waybar"; }];
       fonts = {
         names = [ "Inter" ];
