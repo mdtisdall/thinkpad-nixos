@@ -102,6 +102,17 @@ in
       terminal = "foot";
       menu = "wofi --show drun";
       bars = [{ command = "waybar"; }];
+      fonts = {
+        names = [ "Inter" ];
+        size = 10.0;
+      };
+
+      output."eDP-1".scale = "1.25";
+
+      input = {
+        "type:touchpad".natural_scroll = "enabled";
+        "type:pointer".natural_scroll = "enabled";
+      };
       startup = [{ command = "${genLockImage}"; }];
     };
 

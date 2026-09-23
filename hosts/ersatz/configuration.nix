@@ -27,6 +27,16 @@
     enable32Bit = true;
   };
 
+  # Closest free stand-ins for San Francisco and SF Mono.
+  fonts.packages = with pkgs; [ inter jetbrains-mono ];
+  fonts.fontconfig.defaultFonts = {
+    sansSerif = [ "Inter" ];
+    monospace = [ "JetBrains Mono" ];
+  };
+  # Stem darkening makes glyphs slightly heavier, closer to macOS rendering.
+  environment.sessionVariables.FREETYPE_PROPERTIES =
+    "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
+
   security.rtkit.enable = true;
   security.polkit.enable = true;
 
