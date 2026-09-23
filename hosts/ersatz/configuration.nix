@@ -8,8 +8,15 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  boot.loader.systemd-boot.enable = true;
+  # Lanzaboote replaces the systemd-boot module and signs boot files with the
+  # keys in pkiBundle (create them with `sbctl create-keys` before enabling).
+  boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
+  environment.systemPackages = [ pkgs.sbctl ];
 
   hardware.enableRedistributableFirmware = true;
   hardware.graphics = {

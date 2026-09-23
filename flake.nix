@@ -13,13 +13,19 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.1.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, disko, ... }: {
+  outputs = { self, nixpkgs, home-manager, disko, lanzaboote, ... }: {
     nixosConfigurations.ersatz = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         disko.nixosModules.disko
+        lanzaboote.nixosModules.lanzaboote
         ./hosts/ersatz/disko.nix
         ./hosts/ersatz/hardware-configuration.nix
         ./hosts/ersatz/configuration.nix
