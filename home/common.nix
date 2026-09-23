@@ -12,9 +12,10 @@
 
   programs.git = {
     enable = true;
-    # Fill these in — left blank rather than guessed:
-    userName = "Dylan Tisdall";
-    userEmail = "mtisdall@pennmedicine.upenn.edu";
+    settings.user = {
+      name = "Dylan Tisdall";
+      email = "mtisdall@pennmedicine.upenn.edu";
+    };
   };
 
   programs.bash.enable = true;
