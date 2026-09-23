@@ -18,6 +18,10 @@
   };
   environment.systemPackages = [ pkgs.sbctl ];
 
+  # Try the TPM first; falls back to the passphrase prompt if the TPM refuses
+  # (e.g. Secure Boot off or keys changed). Enroll with systemd-cryptenroll.
+  boot.initrd.luks.devices.crypted.crypttabExtraOpts = [ "tpm2-device=auto" ];
+
   hardware.enableRedistributableFirmware = true;
   hardware.graphics = {
     enable = true;
