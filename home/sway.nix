@@ -113,6 +113,7 @@ in
         "type:touchpad" = {
           natural_scroll = "enabled";
           scroll_factor = "0.4";
+          click_method = "clickfinger";
         };
         "type:pointer".natural_scroll = "enabled";
       };
