@@ -1,8 +1,37 @@
 { config, pkgs, ... }:
 
 let
-  lock = "${config.programs.swaylock.package}/bin/swaylock -f";
+  swaylock = "${config.programs.swaylock.package}/bin/swaylock";
   swaymsg = "${pkgs.sway}/bin/swaymsg";
+
+  # Random Voronoi mosaic: 30-60 flat cells, each a color from the palette.
+  genLockImage = pkgs.writeShellScript "gen-lock-image" ''
+    set -eu
+    dir="$XDG_RUNTIME_DIR/lockscreen"
+    ${pkgs.coreutils}/bin/mkdir -p "$dir"
+    RANDOM=$(${pkgs.coreutils}/bin/od -An -N4 -tu4 /dev/urandom | ${pkgs.coreutils}/bin/tr -d ' ')
+    pal=("#2a7a5e" "#348f72" "#3fa287" "#45a0a0" "#4a97b8" "#4f8fd0" "#3a7fb0")
+    n=$(( 30 + RANDOM % 31 ))
+    pts=""
+    for ((i = 0; i < n; i++)); do
+      pts+="$(( RANDOM % 1920 )),$(( RANDOM % 1200 )) ''${pal[RANDOM % ''${#pal[@]}]} "
+    done
+    ${pkgs.imagemagick_light}/bin/magick -size 1920x1200 xc: -sparse-color Voronoi "$pts" "$dir/next.tmp.png"
+    ${pkgs.coreutils}/bin/mv "$dir/next.tmp.png" "$dir/next.png"
+  '';
+
+  # Shows the pre-generated image (instant, so lid-close locks in time),
+  # then makes the next one in the background.
+  lockScreen = pkgs.writeShellScript "lock-screen" ''
+    ${pkgs.procps}/bin/pgrep -x swaylock >/dev/null && exit 0
+    img="$XDG_RUNTIME_DIR/lockscreen/next.png"
+    if [ -f "$img" ]; then
+      ${swaylock} -f -i "$img"
+    else
+      ${swaylock} -f
+    fi
+    ${genLockImage} >/dev/null 2>&1 &
+  '';
 in
 {
   programs.waybar.enable = true;
@@ -11,9 +40,39 @@ in
 
   programs.swaylock = {
     enable = true;
+    package = pkgs.swaylock-effects;
     settings = {
-      color = "000000";
+      color = "2a7a5e";
+      scaling = "fill";
       show-failed-attempts = true;
+
+      clock = true;
+      indicator = true;
+      timestr = "%-I:%M %p";
+      datestr = "%a %b %-d";
+      indicator-radius = 110;
+      indicator-thickness = 8;
+      fade-in = 0.2;
+
+      inside-color = "0b2a2299";
+      ring-color = "1f5f4b";
+      key-hl-color = "b8f0d8";
+      bs-hl-color = "f0c0a0";
+      text-color = "e8f6f0";
+      line-color = "00000000";
+      separator-color = "00000000";
+
+      inside-clear-color = "0b2a2299";
+      ring-clear-color = "3fa287";
+      text-clear-color = "e8f6f0";
+
+      inside-ver-color = "123d7399";
+      ring-ver-color = "4f8fd0";
+      text-ver-color = "e8f6f0";
+
+      inside-wrong-color = "7a1f1f99";
+      ring-wrong-color = "d05050";
+      text-wrong-color = "ffffff";
     };
   };
 
@@ -21,11 +80,11 @@ in
   services.swayidle = {
     enable = true;
     events = {
-      before-sleep = lock;
-      lock = lock;
+      before-sleep = "${lockScreen}";
+      lock = "${lockScreen}";
     };
     timeouts = [
-      { timeout = 300; command = lock; }
+      { timeout = 300; command = "${lockScreen}"; }
       {
         timeout = 600;
         command = "${swaymsg} 'output * power off'";
@@ -43,6 +102,7 @@ in
       terminal = "foot";
       menu = "wofi --show drun";
       bars = [{ command = "waybar"; }];
+      startup = [{ command = "${genLockImage}"; }];
     };
 
     extraConfig = ''
@@ -51,7 +111,7 @@ in
       bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
       bindsym XF86MonBrightnessUp exec brightnessctl set +5%
       bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
-      bindsym Mod4+Escape exec ${lock}
+      bindsym Mod4+Escape exec ${lockScreen}
     '';
   };
 }
