@@ -10,7 +10,7 @@ let
     dir="$XDG_RUNTIME_DIR/lockscreen"
     ${pkgs.coreutils}/bin/mkdir -p "$dir"
     RANDOM=$(${pkgs.coreutils}/bin/od -An -N4 -tu4 /dev/urandom | ${pkgs.coreutils}/bin/tr -d ' ')
-    pal=("#ff61c6" "#5cecff" "#f4ff61" "#ff9900" "#375971" "#0a0c37")
+    pal=("#ff61c6" "#5cecff" "#f4ff61" "#ff9900" "#375971")
     n=$(( 30 + RANDOM % 31 ))
     pts=""
     for ((i = 0; i < n; i++)); do
