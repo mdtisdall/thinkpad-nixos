@@ -10,7 +10,7 @@ let
     dir="$XDG_RUNTIME_DIR/lockscreen"
     ${pkgs.coreutils}/bin/mkdir -p "$dir"
     RANDOM=$(${pkgs.coreutils}/bin/od -An -N4 -tu4 /dev/urandom | ${pkgs.coreutils}/bin/tr -d ' ')
-    pal=("#2a7a5e" "#348f72" "#3fa287" "#45a0a0" "#4a97b8" "#4f8fd0" "#3a7fb0")
+    pal=("#ff61c6" "#5cecff" "#f4ff61" "#ff9900" "#375971" "#0a0c37")
     n=$(( 30 + RANDOM % 31 ))
     pts=""
     for ((i = 0; i < n; i++)); do
@@ -42,7 +42,7 @@ in
     enable = true;
     package = pkgs.swaylock-effects;
     settings = {
-      color = "2a7a5e";
+      color = "375971";
       scaling = "fill";
       show-failed-attempts = true;
 
@@ -54,25 +54,25 @@ in
       indicator-thickness = 8;
       fade-in = 0.2;
 
-      inside-color = "0b2a2299";
-      ring-color = "1f5f4b";
-      key-hl-color = "b8f0d8";
-      bs-hl-color = "f0c0a0";
-      text-color = "e8f6f0";
+      inside-color = "0a0c37cc";
+      ring-color = "ff61c6";
+      key-hl-color = "5cecff";
+      bs-hl-color = "ff9900";
+      text-color = "f4ff61";
       line-color = "00000000";
       separator-color = "00000000";
 
-      inside-clear-color = "0b2a2299";
-      ring-clear-color = "3fa287";
-      text-clear-color = "e8f6f0";
+      inside-clear-color = "0a0c37cc";
+      ring-clear-color = "f4ff61";
+      text-clear-color = "f4ff61";
 
-      inside-ver-color = "123d7399";
-      ring-ver-color = "4f8fd0";
-      text-ver-color = "e8f6f0";
+      inside-ver-color = "375971cc";
+      ring-ver-color = "5cecff";
+      text-ver-color = "5cecff";
 
-      inside-wrong-color = "7a1f1f99";
-      ring-wrong-color = "d05050";
-      text-wrong-color = "ffffff";
+      inside-wrong-color = "0a0c37cc";
+      ring-wrong-color = "ff9900";
+      text-wrong-color = "ff9900";
     };
   };
 
