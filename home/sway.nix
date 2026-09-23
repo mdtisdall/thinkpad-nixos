@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   swaylock = "${config.programs.swaylock.package}/bin/swaylock";
@@ -96,6 +96,10 @@ in
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
+
+    # mkOptionDefault appends to Home Manager's default list instead of
+    # replacing it. Soteria (polkit agent) needs the session id.
+    systemd.variables = lib.mkOptionDefault [ "XDG_SESSION_ID" ];
 
     config = {
       modifier = "Mod4";
