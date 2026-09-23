@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   swaylock = "${config.programs.swaylock.package}/bin/swaylock";
@@ -34,6 +34,11 @@ let
   '';
 in
 {
+  # Polkit agent (e.g. 1Password's system-auth unlock). Unlike Soteria, it
+  # starts PAM as soon as the dialog opens, so the fingerprint is offered
+  # immediately instead of only after a password is submitted.
+  services.polkit-gnome.enable = true;
+
   programs.waybar.enable = true;
   programs.foot.enable = true;
   programs.wofi.enable = true;
@@ -96,10 +101,6 @@ in
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
-
-    # mkOptionDefault appends to Home Manager's default list instead of
-    # replacing it. Soteria (polkit agent) needs the session id.
-    systemd.variables = lib.mkOptionDefault [ "XDG_SESSION_ID" ];
 
     config = {
       modifier = "Mod4";

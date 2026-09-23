@@ -47,9 +47,6 @@
     polkitPolicyOwners = [ "dylan" ];
   };
 
-  # Polkit agent, so apps (e.g. 1Password's system-auth unlock) can prompt.
-  security.soteria.enable = true;
-
   # Synaptics 06cb:00f9, supported by libfprint's synaptics driver.
   services.fprintd.enable = true;
   # Fingerprint only for polkit prompts (1Password unlock, admin dialogs).
