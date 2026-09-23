@@ -1,4 +1,9 @@
-{ config, osConfig, pkgs, ... }:
+{
+  config,
+  osConfig,
+  pkgs,
+  ...
+}:
 
 let
   swaylock = "${config.programs.swaylock.package}/bin/swaylock";
@@ -59,13 +64,25 @@ in
       height = 28;
       spacing = 4;
 
-      modules-left = [ "sway/workspaces" "sway/mode" ];
+      modules-left = [
+        "sway/workspaces"
+        "sway/mode"
+      ];
       modules-center = [ "sway/window" ];
-      modules-right = [ "tray" "network" "pulseaudio" "battery" "clock" ];
+      modules-right = [
+        "tray"
+        "network"
+        "pulseaudio"
+        "battery"
+        "clock"
+      ];
 
       "sway/workspaces".disable-scroll = true;
       "sway/window".max-length = 60;
-      tray = { icon-size = 16; spacing = 10; };
+      tray = {
+        icon-size = 16;
+        spacing = 10;
+      };
 
       network = {
         format-wifi = faIcon "f1eb";
@@ -80,17 +97,30 @@ in
       pulseaudio = {
         format = "{icon}";
         format-muted = faIcon "f6a9";
-        format-icons.default = map faIcon [ "f026" "f027" "f028" ];
+        format-icons.default = map faIcon [
+          "f026"
+          "f027"
+          "f028"
+        ];
         tooltip-format = "Volume {volume}%";
         on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
       };
 
       battery = {
-        states = { warning = 20; critical = 10; };
+        states = {
+          warning = 20;
+          critical = 10;
+        };
         format = "{capacity}%  {icon}";
         format-charging = "{capacity}%  ${faIcon "f0e7"}";
         format-plugged = "{capacity}%  ${faIcon "f1e6"}";
-        format-icons = map faIcon [ "f244" "f243" "f242" "f241" "f240" ];
+        format-icons = map faIcon [
+          "f244"
+          "f243"
+          "f242"
+          "f241"
+          "f240"
+        ];
         tooltip-format = "{timeTo}";
       };
 
@@ -252,7 +282,10 @@ in
       lock = "${lockScreen}";
     };
     timeouts = [
-      { timeout = 300; command = "${lockScreen}"; }
+      {
+        timeout = 300;
+        command = "${lockScreen}";
+      }
       {
         timeout = 600;
         command = "${swaymsg} 'output * power off'";
@@ -269,7 +302,7 @@ in
       modifier = "Mod4";
       terminal = "foot";
       menu = "wofi";
-      bars = [{ command = "waybar"; }];
+      bars = [ { command = "waybar"; } ];
       fonts = {
         names = [ "Inter" ];
         size = 10.0;

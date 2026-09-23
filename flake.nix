@@ -26,23 +26,33 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, disko, lanzaboote, claude-code, ... }: {
-    nixosConfigurations.ersatz = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        disko.nixosModules.disko
-        lanzaboote.nixosModules.lanzaboote
-        ./hosts/ersatz/disko.nix
-        ./hosts/ersatz/hardware-configuration.nix
-        ./hosts/ersatz/configuration.nix
-        { nixpkgs.overlays = [ claude-code.overlays.default ]; }
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.dylan = import ./home;
-        }
-      ];
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      disko,
+      lanzaboote,
+      claude-code,
+      ...
+    }:
+    {
+      nixosConfigurations.ersatz = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          disko.nixosModules.disko
+          lanzaboote.nixosModules.lanzaboote
+          ./hosts/ersatz/disko.nix
+          ./hosts/ersatz/hardware-configuration.nix
+          ./hosts/ersatz/configuration.nix
+          { nixpkgs.overlays = [ claude-code.overlays.default ]; }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.dylan = import ./home;
+          }
+        ];
+      };
     };
-  };
 }
