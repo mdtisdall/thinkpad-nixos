@@ -56,7 +56,7 @@
     "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
 
   nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [ "1password" ];
+    builtins.elem (lib.getName pkg) [ "1password" "claude-code" ];
 
   # Also installs the setgid 1Password-BrowserSupport helper the Firefox
   # extension uses to talk to the desktop app.

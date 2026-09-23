@@ -18,9 +18,15 @@
       url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Tracks Claude Code releases much faster than nixpkgs does.
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, disko, lanzaboote, ... }: {
+  outputs = { self, nixpkgs, home-manager, disko, lanzaboote, claude-code, ... }: {
     nixosConfigurations.ersatz = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
@@ -29,6 +35,7 @@
         ./hosts/ersatz/disko.nix
         ./hosts/ersatz/hardware-configuration.nix
         ./hosts/ersatz/configuration.nix
+        { nixpkgs.overlays = [ claude-code.overlays.default ]; }
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;

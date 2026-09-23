@@ -8,6 +8,7 @@
     fd
     htop
     brightnessctl
+    claude-code
   ];
 
   programs.git = {
