@@ -100,7 +100,7 @@ in
       };
     };
 
-    # Translucent navy with vaporwave accents (same palette as the lock screen).
+    # Translucent deep purple with vaporwave accents (same palette as the lock screen).
     style = ''
       * {
         font-family: "Inter", sans-serif;
@@ -111,13 +111,13 @@ in
       }
 
       window#waybar {
-        background: rgba(10, 12, 55, 0.55);
+        background: rgba(61, 30, 109, 0.55);
         color: #e8e6f5;
       }
 
       tooltip {
-        background: rgba(10, 12, 55, 0.92);
-        border: 1px solid #375971;
+        background: rgba(61, 30, 109, 0.92);
+        border: 1px solid #b967ff;
         border-radius: 6px;
       }
 
@@ -130,17 +130,20 @@ in
         color: #ff61c6;
         box-shadow: inset 0 -2px #ff61c6;
       }
-      #workspaces button.urgent { color: #ff9900; }
+      #workspaces button.urgent { color: #ff2a6d; }
 
       #mode { padding: 0 8px; color: #f4ff61; }
       #window { color: rgba(232, 230, 245, 0.8); }
 
       #tray, #network, #pulseaudio, #battery, #clock { padding: 0 8px; }
 
+      #network { color: #7b8cff; }
+      #pulseaudio { color: #b967ff; }
+      #battery { color: #05ffa1; }
       #clock { color: #5cecff; }
       #battery.charging, #battery.plugged { color: #f4ff61; }
       #battery.warning:not(.charging) { color: #ff9900; }
-      #battery.critical:not(.charging) { color: #ff61c6; }
+      #battery.critical:not(.charging) { color: #ff2a6d; }
       #network.disconnected, #pulseaudio.muted { color: rgba(232, 230, 245, 0.35); }
     '';
   };
@@ -219,7 +222,7 @@ in
       indicator-thickness = 8;
       fade-in = 0.2;
 
-      inside-color = "0a0c37cc";
+      inside-color = "3d1e6dcc";
       ring-color = "ff61c6";
       key-hl-color = "5cecff";
       bs-hl-color = "ff9900";
@@ -227,7 +230,7 @@ in
       line-color = "00000000";
       separator-color = "00000000";
 
-      inside-clear-color = "0a0c37cc";
+      inside-clear-color = "3d1e6dcc";
       ring-clear-color = "f4ff61";
       text-clear-color = "f4ff61";
 
@@ -235,7 +238,7 @@ in
       ring-ver-color = "5cecff";
       text-ver-color = "5cecff";
 
-      inside-wrong-color = "0a0c37cc";
+      inside-wrong-color = "3d1e6dcc";
       ring-wrong-color = "ff9900";
       text-wrong-color = "ff9900";
     };
