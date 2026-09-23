@@ -58,7 +58,15 @@
   # without blocking password entry; sudo is left as opt-in, like on macOS.
   security.pam.services = lib.genAttrs [
     "login" "greetd" "swaylock" "sudo" "su" "sshd" "passwd" "chsh" "chfn"
-  ] (_: { fprintAuth = false; });
+  ] (_: { fprintAuth = false; }) // {
+    # Unlock the keyring with the login password; keep it in sync on passwd.
+    greetd = { fprintAuth = false; enableGnomeKeyring = true; };
+    passwd = { fprintAuth = false; enableGnomeKeyring = true; };
+  };
+
+  # Secret Service provider. 1Password stores its "trust this device" 2FA
+  # token here; without one it asks for the 2FA code on every unlock.
+  services.gnome.gnome-keyring.enable = true;
 
   # Run Electron apps (1Password) natively on Wayland so they stay sharp at
   # fractional scale instead of going through blurry XWayland.
