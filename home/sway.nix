@@ -16,7 +16,7 @@ let
     for ((i = 0; i < n; i++)); do
       pts+="$(( RANDOM % 1920 )),$(( RANDOM % 1200 )) ''${pal[RANDOM % ''${#pal[@]}]} "
     done
-    ${pkgs.imagemagick_light}/bin/magick -size 1920x1200 xc: -sparse-color Voronoi "$pts" "$dir/next.tmp.png"
+    ${pkgs.imagemagick}/bin/magick -size 1920x1200 xc: -sparse-color Voronoi "$pts" "$dir/next.tmp.png"
     ${pkgs.coreutils}/bin/mv "$dir/next.tmp.png" "$dir/next.png"
   '';
 
