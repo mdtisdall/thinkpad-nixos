@@ -25,7 +25,10 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+    # VA-API driver for Iris Xe, so browsers decode video on the GPU.
+    extraPackages = [ pkgs.intel-media-driver ];
   };
+  environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
   # Closest free stand-ins for San Francisco and SF Mono.
   fonts.packages = with pkgs; [ inter jetbrains-mono font-awesome ];
