@@ -117,7 +117,11 @@ in
         };
         "type:pointer".natural_scroll = "enabled";
       };
-      startup = [{ command = "${genLockImage}"; }];
+      startup = [
+        { command = "${genLockImage}"; }
+        # Runs in the tray so the Firefox extension can reach it.
+        { command = "1password --silent"; }
+      ];
     };
 
     extraConfig = ''

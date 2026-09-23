@@ -37,6 +37,20 @@
   environment.sessionVariables.FREETYPE_PROPERTIES =
     "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
 
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ "1password" ];
+
+  # Also installs the setgid 1Password-BrowserSupport helper the Firefox
+  # extension uses to talk to the desktop app.
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "dylan" ];
+  };
+
+  # Run Electron apps (1Password) natively on Wayland so they stay sharp at
+  # fractional scale instead of going through blurry XWayland.
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   security.rtkit.enable = true;
   security.polkit.enable = true;
 
