@@ -110,7 +110,10 @@ in
       output."eDP-1".scale = "1.25";
 
       input = {
-        "type:touchpad".natural_scroll = "enabled";
+        "type:touchpad" = {
+          natural_scroll = "enabled";
+          scroll_factor = "0.4";
+        };
         "type:pointer".natural_scroll = "enabled";
       };
       startup = [{ command = "${genLockImage}"; }];
