@@ -47,6 +47,19 @@
     polkitPolicyOwners = [ "dylan" ];
   };
 
+  # Polkit agent, so apps (e.g. 1Password's system-auth unlock) can prompt.
+  security.soteria.enable = true;
+
+  # Synaptics 06cb:00f9, supported by libfprint's synaptics driver.
+  services.fprintd.enable = true;
+  # Fingerprint only for polkit prompts (1Password unlock, admin dialogs).
+  # Login stays password-only (the disk auto-unlocks via TPM, so the login
+  # password is the real boot-time gate); swaylock can't take a fingerprint
+  # without blocking password entry; sudo is left as opt-in, like on macOS.
+  security.pam.services = lib.genAttrs [
+    "login" "greetd" "swaylock" "sudo" "su" "sshd" "passwd" "chsh" "chfn"
+  ] (_: { fprintAuth = false; });
+
   # Run Electron apps (1Password) natively on Wayland so they stay sharp at
   # fractional scale instead of going through blurry XWayland.
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
