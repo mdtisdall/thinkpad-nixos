@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, osConfig, pkgs, ... }:
 
 let
   swaylock = "${config.programs.swaylock.package}/bin/swaylock";
@@ -24,6 +24,12 @@ let
   # then makes the next one in the background.
   lockScreen = pkgs.writeShellScript "lock-screen" ''
     ${pkgs.procps}/bin/pgrep -x swaylock >/dev/null && exit 0
+    # 1Password can't see the screen lock on Wayland, so lock it here.
+    # Only if running: --lock would otherwise launch it. Backgrounded so the
+    # lock screen isn't delayed before a lid-close suspend.
+    if ${pkgs.procps}/bin/pgrep -x 1password >/dev/null; then
+      ${osConfig.programs._1password-gui.package}/bin/1password --lock >/dev/null 2>&1 &
+    fi
     img="$XDG_RUNTIME_DIR/lockscreen/next.png"
     if [ -f "$img" ]; then
       ${swaylock} -f -i "$img"
