@@ -1,0 +1,7 @@
+# The flat `services.foo.enable = true;` style keeps related settings
+# together, so allow repeated attribute keys.
+disabled = ["repeated_keys"]
+
+# Other task worktrees live in .worktrees/ (dev-workflow) and are not part of
+# this checkout.
+ignore = [".worktrees", ".direnv"]
