@@ -4,7 +4,6 @@
   networking.hostName = "ersatz";
   networking.networkmanager.enable = true;
 
-  # Guessed from your work email's domain (Penn Medicine) — change if wrong.
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
