@@ -71,10 +71,12 @@
     }
   ];
 
-  # Lid close suspends, then hibernates after 2 hours so a forgotten laptop
-  # doesn't drain its battery.
+  # Lid close suspends, then hibernates after 12 hours so a forgotten laptop
+  # doesn't drain its battery. 12h keeps overnight wakes on the fast suspend
+  # path; resume from hibernate is a full boot. systemd also hibernates
+  # early if the battery drops to ~5% while suspended.
   services.logind.settings.Login.HandleLidSwitch = "suspend-then-hibernate";
-  systemd.sleep.settings.Sleep.HibernateDelaySec = "2h";
+  systemd.sleep.settings.Sleep.HibernateDelaySec = "12h";
 
   hardware.enableRedistributableFirmware = true;
   hardware.graphics = {
