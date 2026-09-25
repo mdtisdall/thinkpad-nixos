@@ -71,7 +71,6 @@ in
       modules-center = [ "sway/window" ];
       modules-right = [
         "tray"
-        "network"
         "pulseaudio"
         "battery"
         "clock"
@@ -82,16 +81,6 @@ in
       tray = {
         icon-size = 16;
         spacing = 10;
-      };
-
-      network = {
-        format-wifi = faIcon "f1eb";
-        format-ethernet = faIcon "f796";
-        format-disconnected = faIcon "f1eb";
-        tooltip-format-wifi = "{essid} ({signalStrength}%)\n{ipaddr}";
-        tooltip-format-ethernet = "{ifname}\n{ipaddr}";
-        tooltip-format-disconnected = "Disconnected";
-        on-click = "foot nmtui";
       };
 
       pulseaudio = {
@@ -165,16 +154,24 @@ in
       #mode { padding: 0 8px; color: #f4ff61; }
       #window { color: rgba(232, 230, 245, 0.8); }
 
-      #tray, #network, #pulseaudio, #battery, #clock { padding: 0 8px; }
+      #pulseaudio, #battery, #clock { padding: 0 8px; }
 
-      #network { color: #7b8cff; }
+      /* The tray icons (nm-applet, 1Password) are full-color images that
+         CSS can't recolor, so give them a lavender pill instead. */
+      #tray {
+        margin: 3px 4px;
+        padding: 0 6px;
+        background: rgba(185, 103, 255, 0.25);
+        border-radius: 6px;
+      }
+
       #pulseaudio { color: #b967ff; }
       #battery { color: #05ffa1; }
       #clock { color: #5cecff; }
       #battery.charging, #battery.plugged { color: #f4ff61; }
       #battery.warning:not(.charging) { color: #ff9900; }
       #battery.critical:not(.charging) { color: #ff2a6d; }
-      #network.disconnected, #pulseaudio.muted { color: rgba(232, 230, 245, 0.35); }
+      #pulseaudio.muted { color: rgba(232, 230, 245, 0.35); }
     '';
   };
   programs.foot.enable = true;
