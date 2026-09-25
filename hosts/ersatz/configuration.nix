@@ -9,6 +9,39 @@
   networking.hostName = "ersatz";
   networking.networkmanager.enable = true;
 
+  # Penn's AirPennNet: EAP-TTLS with the PennKey password sent as PAP inside
+  # the tunnel, so the server certificate must be checked. The system bundle
+  # has Penn's root (USERTrust RSA), and the name must end in upenn.edu.
+  # password-flags = 1 leaves the password to the user's secret agent
+  # (nm-applet), which asks on the first connect and keeps it in the login
+  # keyring. The network is only available after login.
+  networking.networkmanager.ensureProfiles.profiles.AirPennNet = {
+    connection = {
+      id = "AirPennNet";
+      type = "wifi";
+    };
+    wifi = {
+      ssid = "AirPennNet";
+      mode = "infrastructure";
+    };
+    wifi-security.key-mgmt = "wpa-eap";
+    "802-1x" = {
+      eap = "ttls";
+      phase2-auth = "pap";
+      identity = "mtisdall";
+      password-flags = 1;
+      ca-cert = "/etc/ssl/certs/ca-certificates.crt";
+      domain-suffix-match = "upenn.edu";
+    };
+    ipv4.method = "auto";
+    ipv6.method = "auto";
+  };
+
+  # NetworkManager secret agent for the sway session: prompts for Wi-Fi
+  # passwords and stores them in gnome-keyring. Also puts a network menu in
+  # the waybar tray.
+  programs.nm-applet.enable = true;
+
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
